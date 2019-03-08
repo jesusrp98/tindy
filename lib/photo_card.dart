@@ -13,14 +13,13 @@ class PhotoCard extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       clipBehavior: Clip.antiAlias,
       child: CachedNetworkImage(
+        useOldImageOnUrlChange: true,
         imageUrl: url,
         fit: BoxFit.cover,
-        placeholder: (_, string) => Container(
-              width: MediaQuery.of(context).size.width,
-              child: Center(child: CircularProgressIndicator()),
-            ),
-        fadeOutDuration: const Duration(milliseconds: 0),
-        fadeInDuration: const Duration(milliseconds: 0),
+        fadeOutDuration: const Duration(milliseconds: 500),
+        fadeInCurve: Curves.elasticIn,
+        fadeOutCurve: Curves.elasticOut,
+        fadeInDuration: const Duration(milliseconds: 500),
       ),
     );
   }
