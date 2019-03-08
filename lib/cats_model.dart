@@ -1,30 +1,35 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
 
+import 'package:http/http.dart' as http;
 import 'package:scoped_model/scoped_model.dart';
 
 class CatsModel extends Model {
-  List _items;
+  List _items = [];
   int _index = 0;
 
-  bool isLoading = true;
+  bool isLoading;
 
   void loadData() async {
-    final response =
-      await http.get('https://api.thecatapi.com/v1/images/search?limit=10');
+    isLoading = true;
 
+    final response =
+        await http.get('https://api.thecatapi.com/v1/images/search?limit=10');
+
+    _items.clear();
     _items = json.decode(response.body).toList();
+    _index = 0;
 
     isLoading = false;
     notifyListeners();
   }
 
   void gotoNext() {
-    ++_index;
+    _index < _items.length - 1 ? ++_index : loadData();
     notifyListeners();
   }
 
-  void loadMore() {
+  void likePhoto() {
+    //
     gotoNext();
   }
 
