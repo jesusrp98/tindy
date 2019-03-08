@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:scoped_model/scoped_model.dart';
 import 'package:share/share.dart';
 
@@ -21,12 +18,6 @@ class Aplicacion extends StatelessWidget {
       home: Home(),
     );
   }
-}
-
-Future<List> fetchPost(BuildContext context) async {
-  final response =
-      await http.get('https://api.thecatapi.com/v1/images/search?limit=10');
-  return json.decode(response.body).toList();
 }
 
 class Home extends StatefulWidget {
@@ -50,7 +41,7 @@ class _HomeState extends State<Home> {
       child: ScopedModelDescendant<CatsModel>(
         builder: (context, child, model) => Scaffold(
               appBar: AppBar(
-                title: Text('Tindy'),
+                title: Text('TINDy'),
                 centerTitle: true,
               ),
               body: model.isLoading
@@ -62,7 +53,10 @@ class _HomeState extends State<Home> {
                         children: <Widget>[
                           Expanded(
                             flex: 4,
-                            child: Container(
+                            child: InkWell(
+                              onDoubleTap: () => model.likePhoto(),
+                              onLongPress: () => Share.share(model.getItem),
+                              onTap: () => model.gotoNext(),
                               child: PhotoCard(model.getItem),
                             ),
                           ),
@@ -76,7 +70,7 @@ class _HomeState extends State<Home> {
                                   iconSize: 56,
                                   color: Color(0xFFF06292),
                                   tooltip: 'Thumbs up',
-                                  onPressed: () => model.loadMore(),
+                                  onPressed: () => model.likePhoto(),
                                 ),
                                 IconButton(
                                   icon: Icon(Icons.share),
