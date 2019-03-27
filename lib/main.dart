@@ -12,9 +12,7 @@ class Aplicacion extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Tindy',
-      theme: ThemeData(
-        primaryColor: Colors.pink,
-      ),
+      theme: ThemeData(primaryColor: Colors.pink),
       home: Home(),
     );
   }
@@ -40,21 +38,18 @@ class _HomeState extends State<Home> {
       model: model,
       child: ScopedModelDescendant<CatsModel>(
         builder: (context, child, model) => Scaffold(
-              appBar: AppBar(
-                title: Text('TINDy'),
-                centerTitle: true,
-              ),
+              appBar: AppBar(title: Text('TINDy'), centerTitle: true),
               body: model.isLoading
                   ? Center(child: CircularProgressIndicator())
                   : Padding(
-                      padding: const EdgeInsets.all(16),
+                      padding: EdgeInsets.all(16),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
+                        children: [
                           Expanded(
                             flex: 4,
                             child: InkWell(
-                              onDoubleTap: () => model.likePhoto(),
+                              onDoubleTap: () async => await model.likePhoto(),
                               onLongPress: () => Share.share(model.getItem),
                               onTap: () => model.gotoNext(),
                               child: PhotoCard(model.getItem),
@@ -64,13 +59,14 @@ class _HomeState extends State<Home> {
                             flex: 1,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
+                              children: [
                                 IconButton(
                                   icon: Icon(Icons.thumb_up),
                                   iconSize: 56,
                                   color: Color(0xFFF06292),
                                   tooltip: 'Thumbs up',
-                                  onPressed: () => model.likePhoto(),
+                                  onPressed: () async =>
+                                      await model.likePhoto(),
                                 ),
                                 IconButton(
                                   icon: Icon(Icons.share),

@@ -1,6 +1,4 @@
-import 'dart:convert';
-
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class CatsModel extends Model {
@@ -9,27 +7,34 @@ class CatsModel extends Model {
 
   bool isLoading;
 
-  void loadData() async {
+  loadData() async {
     isLoading = true;
 
     final response =
-        await http.get('https://api.thecatapi.com/v1/images/search?limit=10');
+        await Dio().get('https://api.thecatapi.com/v1/images/search?limit=10');
 
     _items.clear();
-    _items = json.decode(response.body).toList();
+    _items = response.data;
     _index = 0;
 
     isLoading = false;
     notifyListeners();
   }
 
-  void gotoNext() {
+  gotoNext() {
     _index < _items.length - 1 ? ++_index : loadData();
     notifyListeners();
   }
 
-  void likePhoto() {
-    //
+  Future likePhoto() async {
+    await Dio().post(
+      'https://api.thecatapi.com/v1/votes',
+      options: Options(headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': '0720e5fe-dd7e-4234-826d-71482388ef22',
+      }),
+      data: {'image_id': _items[_index]['id'], 'sub_id': '0t2qrj', 'value': 1},
+    );
     gotoNext();
   }
 
